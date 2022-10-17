@@ -12,7 +12,7 @@ defmodule Echo.Server do
     # 4. `reuseaddr: true` - allows us to reuse the address if the listener crashes
     #
     {:ok, listen_socket} =
-      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+      :gen_tcp.listen(port, [:binary, packet: :raw, active: false, reuseaddr: true])
     Logger.info("Accepting connections on port #{port}")
     loop_acceptor(listen_socket)
   end
@@ -34,6 +34,7 @@ defmodule Echo.Server do
   defp read_line(socket) do
     case :gen_tcp.recv(socket, 0) do
       {:ok, data} ->
+        Logger.info("Recv data: #{data}")
         data
       {:error, _} ->
         nil
