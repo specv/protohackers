@@ -19,7 +19,7 @@ defmodule Echo.Server do
 
   defp loop_acceptor(listen_socket) do
     {:ok, socket} = :gen_tcp.accept(listen_socket)
-    serve(socket)
+    Task.start_link(fn -> serve(socket) end)
     loop_acceptor(listen_socket)
   end
 
