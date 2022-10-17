@@ -32,10 +32,15 @@ defmodule Echo.Server do
   end
 
   defp read_line(socket) do
-    {:ok, data} = :gen_tcp.recv(socket, 0)
-    data
+    case :gen_tcp.recv(socket, 0) do
+      {:ok, data} ->
+        data
+      {:error, _} ->
+        nil
+    end
   end
 
+  defp write_line(nil, _), do: nil
   defp write_line(line, socket) do
     :gen_tcp.send(socket, line)
   end
